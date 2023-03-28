@@ -163,7 +163,7 @@ func Connect() {
 	fmt.Println(" Home Appointment Table Created")
 	// Create test Appointment table
 
-	_, err = db.Exec("CREATE TABLE IF NOT EXISTS TestAppointment(TestAppointmentBookingid INT NOT NULL AUTO_INCREMENT,Patient_id INT,Doctor_id INT,Test_name VARCHAR(255),PRIMARY KEY (TestAppointmentBookingid),FOREIGN KEY (Patient_id) REFERENCES Patient(ID),FOREIGN KEY (Doctor_id) REFERENCES Doctor(ID));")
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS TestAppointment(TestAppointmentBookingid INT NOT NULL AUTO_INCREMENT,Patient_id INT,Doctor_id INT,Test_Name VARCHAR(255),Booking_time VARCHAR(10),PRIMARY KEY (TestAppointmentBookingid),FOREIGN KEY (Patient_id) REFERENCES Patient(ID),FOREIGN KEY (Doctor_id) REFERENCES Doctor(ID));")
 
 	if err != nil {
 
@@ -173,7 +173,7 @@ func Connect() {
 	fmt.Println(" test Appointment Table Created")
 	// Create lab table
 
-	_, err = db.Exec("CREATE TABLE IF NOT EXISTS lab(Labid INT NOT NULL AUTO_INCREMENT,Lab_Name VARCHAR(50),Lab_Operator_Name VARCHAR(50),Phone VARCHAR(15),Address VARCHAR(255),City VARCHAR(50),Pin_Code VARCHAR(7),Available_test_name VARCHAR(255),PRIMARY KEY (Labid));")
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS lab(Labid INT NOT NULL AUTO_INCREMENT,Lab_Name VARCHAR(50),Lab_Operator_Name VARCHAR(50),Phone VARCHAR(15),Address VARCHAR(255),City VARCHAR(50),Pin_Code VARCHAR(7),Available_test_name VARCHAR(255),Opening_time VARCHAR(10),Closing_time VARCHAR(10),Availability  VARCHAR(10),Availability_time_for_test VARCHAR(30),PRIMARY KEY (Labid));")
 
 	if err != nil {
 
@@ -181,5 +181,15 @@ func Connect() {
 
 	}
 	fmt.Println(" Lab Detail Table Created")
+
+	// Create Lab_Feedback table
+	_, err = db.Exec("CREATE TABLE IF NOT EXISTS Lab_feedback(feedbackid INT NOT NULL AUTO_INCREMENT,Patient_id INT,Labid INT,Rating INT,feedback_msg VARCHAR(255),PRIMARY KEY (feedbackid),FOREIGN KEY (Patient_id) REFERENCES Patient(ID),FOREIGN KEY (Doctor_id) REFERENCES Doctor(ID));")
+
+	if err != nil {
+
+		panic(err.Error())
+
+	}
+	fmt.Println(" Lab_Feedback Table Created")
 
 }

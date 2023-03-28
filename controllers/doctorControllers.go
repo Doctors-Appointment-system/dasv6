@@ -198,8 +198,6 @@ func Update_docter() gin.HandlerFunc {
 			return
 		}
 
-		c.JSON(http.StatusOK, gin.H{"message": "Customer updated"})
-
 		c.IndentedJSON(http.StatusCreated, data)
 
 		c.JSON(http.StatusOK, gin.H{"message": "Doctor updated successfully"})
@@ -406,7 +404,7 @@ func CheckMyAppointment() gin.HandlerFunc {
 	}
 }
 
-func CheckMyFeedback() gin.HandlerFunc {
+func Doctor_Checking_Feedback() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		db, err := sql.Open("mysql", "root:india@123@tcp(localhost:3306)/das")
 		if err != nil {

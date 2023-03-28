@@ -13,4 +13,6 @@ func DoctorRoutes(incomingRoutes *gin.Engine) {
 	incomingRoutes.PUT("/doctor", controller.Update_docter())    //done
 	incomingRoutes.DELETE("/doctor", controller.Delete_docter()) //done
 	incomingRoutes.GET("/doctor/MyAppointment", controller.CheckMyAppointment())
+	incomingRoutes.GET("/doctor/feedback", controller.Doctor_Checking_Feedback())
+
 }

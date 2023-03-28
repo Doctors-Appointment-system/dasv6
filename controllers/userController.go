@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"Doctor-Appointment-Project/database"
-	helper "Doctor-Appointment-Project/helpers"
+	helper "Doctor-Appointment-Project/helper"
 	"Doctor-Appointment-Project/models"
 	"context"
 	"fmt"

@@ -1,7 +1,7 @@
 package middleware
 
 import (
-	helper "Doctor-Appointment-Project/helpers"
+	helper "Doctor-Appointment-Project/helper"
 	"fmt"
 	"net/http"
 

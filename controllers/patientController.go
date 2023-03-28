@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"database/sql"
-	"time"
 
 	"fmt"
 
@@ -15,20 +14,9 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 
 	"Doctor-Appointment-Project/models"
+
+	helper "Doctor-Appointment-Project/helper"
 )
-
-func add_time(s string) string {
-	timeStr := s
-	t, err := time.Parse("15:04", timeStr)
-	if err != nil {
-		panic(err)
-	}
-
-	t = t.Add(30 * time.Minute)
-	newTimeStr := t.Format("15:04")
-
-	return newTimeStr
-}
 
 func Addpatient() gin.HandlerFunc {
 	return func(c *gin.Context) {
@@ -117,7 +105,7 @@ func Get_my_details() gin.HandlerFunc {
 
 		}
 
-		c.JSON(http.StatusOK, gin.H{"message": "Patient Deleted successfully"})
+		c.JSON(http.StatusOK, gin.H{"message": "Your details"})
 
 	}
 }
@@ -217,11 +205,6 @@ func DeletePatient() gin.HandlerFunc {
 	}
 }
 
-type TimeStr struct {
-	Availability_time string
-	Closing_time      string
-}
-
 func BookingAppointment() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		db, err := sql.Open("mysql", "root:india@123@tcp(localhost:3306)/das")
@@ -232,12 +215,13 @@ func BookingAppointment() gin.HandlerFunc {
 		}
 		// var Doctor_str doctor
 		var booking_data models.Appointment
+		var doctor_data models.Doctor
 		err = c.BindJSON(&booking_data)
 		if err != nil {
 			log.Fatal(err)
 		}
 
-		get_booking_time := fmt.Sprintf("SELECT Availability_time,Closing_time FROM Doctor WHERE id = %d", booking_data.Doctor_id)
+		get_booking_time := fmt.Sprintf("SELECT Availability_time,Closing_time FROM Doctor WHERE id = %d", doctor_data.ID)
 		doctor_result, err := db.Query(get_booking_time)
 		// doctor_result,err := db.Exec(get_booking_time)
 		if err != nil {
@@ -245,10 +229,10 @@ func BookingAppointment() gin.HandlerFunc {
 			return
 		}
 
-		var people []TimeStr
+		var people []models.TimeStr
 
 		for doctor_result.Next() {
-			var p TimeStr
+			var p models.TimeStr
 			if err := doctor_result.Scan(&p.Availability_time, &p.Closing_time); err != nil {
 				log.Fatal(err)
 			}
@@ -278,19 +262,13 @@ func BookingAppointment() gin.HandlerFunc {
 			panic(err.Error())
 
 		}
-		t1 := add_time(booktime)
+		t1 := helper.Add_time(booktime)
 
 		query_data2 := fmt.Sprintf(`UPDATE Doctor SET Availability_time = '%s' WHERE ID = %d`, t1, booking_data.Doctor_id)
 
 		fmt.Println(query_data2)
 
 		_, err = db.Query(query_data2)
-		if err != nil {
-
-			panic(err.Error())
-
-		}
-
 		if err != nil {
 
 			panic(err.Error())
@@ -338,7 +316,7 @@ func Cancel_appointment() gin.HandlerFunc {
 	}
 }
 
-func Feedback() gin.HandlerFunc {
+func Doctor_feedback() gin.HandlerFunc {
 	return func(c *gin.Context) {
 
 		fmt.Println("add feedback")
@@ -362,7 +340,7 @@ func Feedback() gin.HandlerFunc {
 
 		c.IndentedJSON(http.StatusCreated, data)
 
-		query_data := fmt.Sprintf(`INSERT INTO Feedback(Patient_id,Doctor_id,Feedback_msg) VALUES(%d,%d,%d,'%s')`, data.Patient_id, data.Doctor_id, data.Rating, data.Feedback_msg)
+		query_data := fmt.Sprintf(`INSERT INTO Feedback(Patient_id,Doctor_id,Rating,Feedback_msg) VALUES(%d,%d,%d,'%s')`, data.Patient_id, data.Doctor_id, data.Rating, data.Feedback_msg)
 
 		fmt.Println(query_data)
 
